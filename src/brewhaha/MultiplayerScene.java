@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import networking.Client;
 import networking.Server;
+import networking.ServerCallback;
 import networking.GameState;
 
 public class MultiplayerScene {
@@ -75,7 +76,37 @@ public class MultiplayerScene {
             if (portResult.isPresent()) {
                 this.port = Integer.parseInt(portResult.get());
             }
-            this.server = new Server(this.port);
+            this.server = new Server(port, new ServerCallback() {
+        @Override
+        public void onPlayerConnected(String playerName) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    playerList.appendText(playerName + "\n");
+                }
+            });
+        }
+
+        @Override
+        public void onChatMessageReceived(String message) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatArea.appendText(message + "\n");
+                }
+            });
+        }
+
+        @Override
+        public void onPlayerReady(String playerName) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatArea.appendText(playerName + " is ready\n");
+                }
+            });
+        }
+    });
             System.out.println("Server started at " + server.getSocket().getLocalAddress() + " on port " + this.port);
             this.server.setState(GameState.WAITING_FOR_PLAYERS);
         }
@@ -102,6 +133,25 @@ public class MultiplayerScene {
                         }
                     });
                 }
+            }
+
+            @Override
+            public void onPlayerListReceived(String[] playerNames) {
+                // update the player list
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        playerList.clear();
+                        for (String playerName : playerNames) {
+                            playerList.appendText(playerName + "\n");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onPlayerReady(String playerName) {
+                // Your implementation here
             }
             });
             System.out.println("Client started on port " + this.port);
@@ -255,6 +305,28 @@ public class MultiplayerScene {
                                         chatArea.appendText(message + "\n");
                                     }
                                 });
+                            }
+
+                            @Override
+                            public void onPlayerListReceived(String[] playerNames) {
+                                System.out.println("INSIDE");
+                                // update the player list
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        playerList.clear();
+                                        for (String playerName : playerNames) {
+                                            System.out.println("INSIDEE");
+                                            System.out.println(playerName);
+                                            playerList.appendText(playerName + "\n");
+                                        }
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onPlayerReady(String playerName) {
+                                // Your implementation here
                             }
                         });
                     }
