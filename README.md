@@ -24,11 +24,11 @@ Lab Section: B-4L
 
 Lab Instructor: Elijah Nicholas Isungga
 
-## HOW TO RUN
+## HOW TO SETUP
 
-1. Install JAVA SE Development Kit (Java 22), JavaFx
-2. Unzip the 'lib.zip' the JavaFX files to the project in the 'lib' folder
-3. Edit the .vscode files (launch.json & settings.json) to match your JavaFX path (see below)
+1. Install JAVA SE Development Kit (Java 22)
+2. Unzip the 'lib.zip' the JavaFX files to the project in the 'lib' folder (lib folder should be at root folder)
+3. Edit the files inside the .vscode folder (launch.json & settings.json) to match your JavaFX path (see below)
 4. Run the game using the 'Main.java' file
   
 - For #3, Add the following to the 'launch.json' file:
