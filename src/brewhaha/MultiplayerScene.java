@@ -39,6 +39,7 @@ public class MultiplayerScene {
     private boolean playerIsServer;
     private String playerName;
     private Server server;
+    private Client client;
     private InetAddress serverAddress;
     private int port;
 
@@ -89,18 +90,21 @@ public class MultiplayerScene {
             if (portResult.isPresent()) {
                 this.port = Integer.parseInt(portResult.get());
             }
-            Client client = new Client(this.port, this.playerName, new Client.ClientCallback() {
+            this.client = new Client(this.port, this.playerName, new Client.ClientCallback() {
             @Override
             public void onMessageReceived(String message) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        chatArea.appendText(message + "\n");
-                    }
-                });
-    }
-});
-
+                // display the chat message in the chat area
+                if (!message.startsWith(playerName)){
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            chatArea.appendText(message + "\n");
+                        }
+                    });
+                }
+            }
+            });
+            System.out.println("Client started on port " + this.port);
             // send connect message to server
             try {
                 client.connect(InetAddress.getLocalHost(), this.port, this.playerName);
@@ -230,17 +234,36 @@ public class MultiplayerScene {
         // send button
         this.sendButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent arg0) {
-                
                 // send the chat message
                 String message = chatInput.getText();
                 chatArea.appendText(playerName + ": " + message + "\n");
                 chatInput.clear();
                 String chatMessage = "chat " + playerName + ": " + message;
+                
                 // send the message to the server
                 if (playerIsServer) {
                     MultiplayerScene.this.server.sendToClients(chatMessage.getBytes());
                 } else {
-                    //client.sendChatMessage(message, serverAddress, MultiplayerScene.this.port, playerName);
+                    // instantiate the client if it doesn't exist
+                    if (MultiplayerScene.this.client == null){
+                        MultiplayerScene.this.client = new Client(port, playerName, new Client.ClientCallback() {
+                            @Override
+                            public void onMessageReceived(String message) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        chatArea.appendText(message + "\n");
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    // send the message to the server so it can be broadcasted to all clients
+                    try {
+                        MultiplayerScene.this.client.sendPacket(chatMessage.getBytes(), InetAddress.getLocalHost(), port);
+                    } catch (UnknownHostException e) {
+                        System.out.println("Error sending chat message to server");
+                    }
                 }
             }
         });

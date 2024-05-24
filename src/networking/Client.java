@@ -49,6 +49,7 @@ public class Client implements Runnable {
             socket.send(packet);
         } catch (Exception e) {
             System.out.println("Error sending packet");
+            e.printStackTrace();
         }
     }
     
@@ -91,7 +92,7 @@ public class Client implements Runnable {
     // run method for the client
     @Override
     public void run() {
-        //System.out.println("Client running");
+        System.out.println("Client running");
         while (true){
             byte[] data = receivePacket();
             System.out.println(new String(data).trim());
@@ -107,7 +108,7 @@ public class Client implements Runnable {
                 System.out.println(new String(data).trim().substring(7));
             }
             else if (new String(data).trim().startsWith("ready")){
-                System.out.println(new String(data).trim());
+                System.out.println(new String(data).trim().substring(6));
             }
 
             
