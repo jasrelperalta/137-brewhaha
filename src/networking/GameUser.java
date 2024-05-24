@@ -14,6 +14,9 @@ public class GameUser {
     // integer to store the player's port number
     private int port;
 
+    private int score;
+    private int serverId;
+
     // constructor
     public GameUser(String name, InetAddress address, int port){
         this.name = name;
@@ -35,6 +38,17 @@ public class GameUser {
     public int getPort(){
         return port;
     }
+
+    // setter for the player server id
+    public void setServerId(int id){
+        this.serverId = id;
+    }
+
+    // getter for the player server id
+    public int getServerId(){
+        return serverId;
+    }
+
 
     // setter for the player name
     public void setName(String name){

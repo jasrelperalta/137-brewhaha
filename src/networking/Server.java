@@ -4,9 +4,19 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 
+// Server callback interface
+public interface ServerCallback {
+    void onPlayerConnected(String playerName);
+    void onChatMessageReceived(String message);
+    void onPlayerReady(String playerName);
+}
+
 
 // class for the server to be used in MultiplayerScene.java
 public class Server implements Runnable {
+
+    
+    
     
     // datagram socket for the server
     private DatagramSocket socket;
@@ -20,11 +30,16 @@ public class Server implements Runnable {
     // thread for the server
 	Thread t = new Thread(this);
 
+    // Server callback
+    private ServerCallback callback;
+
     // constructor
-    public Server(int port){
+    public Server(int port, ServerCallback callback){
         this.state = GameState.INITIALIZING_SERVER;
         try {
+            
             this.socket = new DatagramSocket(port, InetAddress.getLocalHost());
+            this.callback = callback; // set the callback
         } catch (SocketException e) {
             System.out.println("Error creating server socket");
         } catch (UnknownHostException e) {
@@ -53,21 +68,46 @@ public class Server implements Runnable {
 
                 // if the packet is a connect packet, add the player to the player list
                 if (new String(packet.getData()).trim().startsWith("connect")){
-                    System.out.println(new String(packet.getData()).trim().substring(7) + " connected");
+                    String playerName = new String(data).trim().substring(7);
+                    System.out.println(playerName + " connected");
                     // add the player to the player list
-                    addPlayer(new GameUser(new String(packet.getData()).trim().substring(7), packet.getAddress(), packet.getPort()));
+                    addPlayer(new GameUser(playerName, packet.getAddress(), packet.getPort()));
                     // print the number of players
                     System.out.println("Number of players: " + players.size());
+                    // Notify the callback about the new player
+                    if (callback != null) {
+                        callback.onPlayerConnected(playerName);
+                    }
+
+                    // Convert the player list to a string
+                    StringBuilder playerListString = new StringBuilder("player ");
+                    for (GameUser p : players) {
+                        playerListString.append(p.getName()).append(",");
+                    }
+                    playerListString.deleteCharAt(playerListString.length() - 1); // Remove the trailing comma
+
+                    // Send the player list to all clients
+                    sendToClients(playerListString.toString().getBytes());
                 }
 
                 // if the packet is a chat message, send it to all clients
                 else if (new String(packet.getData()).trim().startsWith("chat")){
+                    String chatMessage = new String(data).trim().substring(5);
                     sendToClients(packet.getData());
+                    // Notify the callback about the new message
+                    if (callback != null) {
+                        callback.onChatMessageReceived(chatMessage);
+                    }
                 }
 
                 // if the packet is a ready packet, send it to all clients
                 else if (new String(packet.getData()).trim().startsWith("ready")){
+                    String playerName = new String(data).trim().substring(6);
                     sendToClients(packet.getData());
+                    // Notify the callback about the ready player
+                    if (callback != null) {
+                        callback.onPlayerReady(playerName);
+                    }
                 }
             } catch (IOException e) {
                 System.out.println("Error receiving packet");

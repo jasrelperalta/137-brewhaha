@@ -22,11 +22,13 @@ public class Client implements Runnable {
     // Callback interface
     public interface ClientCallback {
         void onMessageReceived(String message);
+        void onPlayerListReceived(String[] playerNames); 
+        void onPlayerReady(String playerName);
     }
 
     private ClientCallback callback;
     
-    // constructor
+    // constßructor
     public Client(int serverPort, String name, ClientCallback callback){
         try {
             this.socket = new DatagramSocket();
@@ -106,9 +108,30 @@ public class Client implements Runnable {
             }
             else if (new String(data).trim().startsWith("player")){
                 System.out.println(new String(data).trim().substring(7));
+                
+                // Notify the callback about the new player
+                String receivedMessage = new String(data).trim();
+                String playerListString = receivedMessage.substring(7);
+                System.out.println("playerListString");
+                // Parse the player list string into an array
+                String[] playerNames = playerListString.split(",");
+
+                //print the player list
+                for (String p : playerNames) {
+                    System.out.println(p);
+                }
+                
+                // Notify the callback about the new player list
+                if (callback != null) {
+                    callback.onPlayerListReceived(playerNames);
+                }
             }
             else if (new String(data).trim().startsWith("ready")){
                 System.out.println(new String(data).trim().substring(6));
+                // Notify the callback about the ready player
+                if (callback != null) {
+                    callback.onPlayerReady(new String(data).trim().substring(5));
+                }
             }
 
             
