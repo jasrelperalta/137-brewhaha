@@ -130,7 +130,7 @@ public class Client implements Runnable {
                 System.out.println(new String(data).trim().substring(6));
                 // Notify the callback about the ready player
                 if (callback != null) {
-                    callback.onPlayerReady(new String(data).trim().substring(5));
+                    callback.onPlayerReady(new String(data).trim().substring(6));
                 }
             }
 

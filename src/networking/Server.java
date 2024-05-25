@@ -23,6 +23,7 @@ public class Server implements Runnable {
 
     // state of the server 
     private int state;
+    private String name;
 
     // player list array
     private ArrayList<GameUser> players = new ArrayList<GameUser>();
@@ -34,8 +35,9 @@ public class Server implements Runnable {
     private ServerCallback callback;
 
     // constructor
-    public Server(int port, ServerCallback callback){
+    public Server(int port, String name, ServerCallback callback){
         this.state = GameState.INITIALIZING_SERVER;
+        this.name = name;
         try {
             
             this.socket = new DatagramSocket(port, InetAddress.getLocalHost());
@@ -57,7 +59,7 @@ public class Server implements Runnable {
         System.out.println("Server waiting for players");
         
         // add the server to the player list
-        addPlayer(new GameUser("Server", socket.getInetAddress(), socket.getPort()));
+        addPlayer(new GameUser(this.name, socket.getInetAddress(), socket.getPort()));
         
         // magical while loop
         while (true){
