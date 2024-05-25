@@ -151,7 +151,13 @@ public class MultiplayerScene {
 
             @Override
             public void onPlayerReady(String playerName) {
-                // Your implementation here
+                // display the chat message in the chat area
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        chatArea.appendText(playerName + " is ready\n");
+                    }
+                });
             }
             });
             System.out.println("Client started on port " + this.port);
@@ -309,15 +315,12 @@ public class MultiplayerScene {
 
                             @Override
                             public void onPlayerListReceived(String[] playerNames) {
-                                System.out.println("INSIDE");
                                 // update the player list
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
                                         playerList.clear();
                                         for (String playerName : playerNames) {
-                                            System.out.println("INSIDEE");
-                                            System.out.println(playerName);
                                             playerList.appendText(playerName + "\n");
                                         }
                                     }
@@ -326,7 +329,13 @@ public class MultiplayerScene {
 
                             @Override
                             public void onPlayerReady(String playerName) {
-                                // Your implementation here
+                                // display the chat message in the chat area
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        chatArea.appendText(playerName + " is ready\n");
+                                    }
+                                });
                             }
                         });
                     }
@@ -345,6 +354,56 @@ public class MultiplayerScene {
             public void handle(MouseEvent arg0) {
                 // send the ready message
                 chatArea.appendText(playerName + " is ready\n");
+                String readyMessage = "ready " + playerName;
+                if (playerIsServer) {
+                    MultiplayerScene.this.server.sendToClients(readyMessage.getBytes());
+                } else {
+                    // instantiate the client if it doesn't exist
+                    if (MultiplayerScene.this.client == null){
+                        MultiplayerScene.this.client = new Client(port, playerName, new Client.ClientCallback() {
+                            @Override
+                            public void onMessageReceived(String message) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        chatArea.appendText(message + "\n");
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onPlayerListReceived(String[] playerNames) {
+                                // update the player list
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        playerList.clear();
+                                        for (String playerName : playerNames) {
+                                            playerList.appendText(playerName + "\n");
+                                        }
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onPlayerReady(String playerName) {
+                                // display the chat message in the chat area
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        chatArea.appendText(playerName + " is ready\n");
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    // send the message to the server so it can be broadcasted to all clients
+                    try {
+                        MultiplayerScene.this.client.sendPacket(readyMessage.getBytes(), InetAddress.getLocalHost(), port);
+                    } catch (UnknownHostException e) {
+                        System.out.println("Error sending ready message to server");
+                    }
+                }
             }
         });
     }
