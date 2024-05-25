@@ -27,6 +27,7 @@ import networking.Client;
 import networking.Server;
 import networking.ServerCallback;
 import networking.GameState;
+import networking.GameUser;
 
 public class MultiplayerScene {
 
@@ -76,7 +77,7 @@ public class MultiplayerScene {
             if (portResult.isPresent()) {
                 this.port = Integer.parseInt(portResult.get());
             }
-            this.server = new Server(port, new ServerCallback() {
+            this.server = new Server(port, this.playerName, new ServerCallback() {
         @Override
         public void onPlayerConnected(String playerName) {
             Platform.runLater(new Runnable() {
@@ -107,6 +108,7 @@ public class MultiplayerScene {
             });
         }
     });
+            
             System.out.println("Server started at " + server.getSocket().getLocalAddress() + " on port " + this.port);
             this.server.setState(GameState.WAITING_FOR_PLAYERS);
         }
@@ -190,6 +192,10 @@ public class MultiplayerScene {
         // add event handlers
         this.addEventHandlers();
 
+        if (this.playerIsServer){
+            playerList.appendText(playerName + "\n");
+        }
+
     }
 
     private void initMultiplayer(){
@@ -239,6 +245,13 @@ public class MultiplayerScene {
         chatHeader.setTranslateY(80);
         this.pane.getChildren().addAll(chatHeader, this.chatArea);
 
+    }
+
+    public void updatePlayerListFromServer() {
+        playerList.clear();
+        for (GameUser player : this.server.getPlayers()) {
+            playerList.appendText(player.getName() + "\n");
+        }
     }
 
     // create the chat input
@@ -353,9 +366,11 @@ public class MultiplayerScene {
         this.readyButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent arg0) {
                 // send the ready message
-                chatArea.appendText(playerName + " is ready\n");
+                //chatArea.appendText(playerName + " is ready\n");
                 String readyMessage = "ready " + playerName;
                 if (playerIsServer) {
+                    //System.out.println(MultiplayerScene.this.server.getName());
+                    chatArea.appendText(playerName + " is ready\n");
                     MultiplayerScene.this.server.sendToClients(readyMessage.getBytes());
                 } else {
                     // instantiate the client if it doesn't exist
