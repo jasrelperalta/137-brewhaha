@@ -11,4 +11,6 @@ public class MultiplayerGame {
     // send packets that the game is over for all players except the winner
     // continue showing the game screen even for those already dead
     // show the game over screen if all players are dead
+
+    // use GameState for keeping track of all the game states
 }
