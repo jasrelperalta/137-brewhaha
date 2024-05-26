@@ -102,6 +102,16 @@ public class Server implements Runnable {
                 else if (new String(packet.getData()).trim().startsWith("ready")){
                     String playerName = new String(data).trim().substring(6);
                     sendToClients(packet.getData());
+                    // Update the player list
+                    for (GameUser p : players) {
+                        System.out.println("hanapin si " + p.getName().trim());
+                        System.out.println(p.getName().trim().equals(playerName.trim()));
+                        if (p.getName().trim().equals(playerName.trim())) {
+                            System.out.println("ready");
+                            System.out.println(p.getName());
+                            p.setReady(true);
+                        }
+                    }
                     // Notify the callback about the ready player
                     if (callback != null) {
                         callback.onPlayerReady(playerName);
@@ -163,5 +173,10 @@ public class Server implements Runnable {
 
     public DatagramSocket getSocket() {
         return socket;
+    }
+
+    public void startGame() {
+        this.state = GameState.GAME_START;
+        sendToClients("start".getBytes());
     }
 }
