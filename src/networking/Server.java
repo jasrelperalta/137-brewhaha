@@ -4,19 +4,15 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 
-// Server callback interface
-public interface ServerCallback {
-    void onPlayerConnected(String playerName);
-    void onChatMessageReceived(String message);
-    void onPlayerReady(String playerName);
-}
-
-
 // class for the server to be used in MultiplayerScene.java
 public class Server implements Runnable {
 
-    
-    
+    // Server callback interface
+    public interface ServerCallback {
+        void onPlayerConnected(String playerName);
+        void onChatMessageReceived(String message);
+        void onPlayerReady(String playerName);
+    } 
     
     // datagram socket for the server
     private DatagramSocket socket;

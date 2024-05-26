@@ -20,12 +20,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import networking.Client;
 import networking.Server;
-import networking.ServerCallback;
 import networking.GameState;
 import networking.GameUser;
 
@@ -77,7 +75,7 @@ public class MultiplayerScene {
             if (portResult.isPresent()) {
                 this.port = Integer.parseInt(portResult.get());
             }
-            this.server = new Server(port, this.playerName, new ServerCallback() {
+            this.server = new Server(port, this.playerName, new Server.ServerCallback() {
         @Override
         public void onPlayerConnected(String playerName) {
             Platform.runLater(new Runnable() {
