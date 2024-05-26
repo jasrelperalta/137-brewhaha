@@ -370,6 +370,23 @@ public class MultiplayerScene {
                     //System.out.println(MultiplayerScene.this.server.getName());
                     chatArea.appendText(playerName + " is ready\n");
                     MultiplayerScene.this.server.sendToClients(readyMessage.getBytes());
+
+                    // update the ready state of the player
+                    MultiplayerScene.this.server.getPlayers().get(0).setReady(true);
+                    // check if all players are ready
+                    boolean allReady = true;
+                    for (GameUser player : server.getPlayers()) {
+                        if (!player.isReady()) {
+                            allReady = false;
+                            chatArea.appendText(player.getName() + " is not ready\n");
+                        }
+                    }
+                    // if all players are ready, start the game
+                    if (allReady) {
+                        MultiplayerScene.this.server.startGame();
+                        chatArea.appendText("Game starting...\n");
+                    }
+                    
                 } else {
                     // instantiate the client if it doesn't exist
                     if (MultiplayerScene.this.client == null){
@@ -413,6 +430,8 @@ public class MultiplayerScene {
                     // send the message to the server so it can be broadcasted to all clients
                     try {
                         MultiplayerScene.this.client.sendPacket(readyMessage.getBytes(), InetAddress.getLocalHost(), port);
+                        // update the ready state of the player
+                        MultiplayerScene.this.client.getGameUser().setReady(true);
                     } catch (UnknownHostException e) {
                         System.out.println("Error sending ready message to server");
                     }

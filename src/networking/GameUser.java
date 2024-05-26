@@ -16,12 +16,15 @@ public class GameUser {
 
     private int score;
     private int serverId;
+    private boolean ready;
 
     // constructor
     public GameUser(String name, InetAddress address, int port){
         this.name = name;
         this.address = address;
         this.port = port;
+        this.score = 0;
+        this.ready = false;
     }
 
     // getter for the player name
@@ -53,5 +56,15 @@ public class GameUser {
     // setter for the player name
     public void setName(String name){
         this.name = name;
+    }
+
+    // setter if the player is ready
+    public void setReady(boolean ready){
+        this.ready = ready;
+    }
+
+    // getter if the player is ready
+    public boolean isReady(){
+        return this.ready;
     }
 }

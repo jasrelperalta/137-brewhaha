@@ -85,6 +85,11 @@ public class Client implements Runnable {
         byte[] data = "ready".getBytes();
         sendPacket(data, address, port);
     }
+
+    // get game user object
+    public GameUser getGameUser(){
+        return player;
+    }
     
     // method to close the socket
     public void close(){
@@ -132,9 +137,7 @@ public class Client implements Runnable {
                 if (callback != null) {
                     callback.onPlayerReady(new String(data).trim().substring(6));
                 }
-            }
-
-            
+            }           
         }
     }
     
