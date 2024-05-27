@@ -12,13 +12,13 @@ class Spaceship extends Sprite {
 
 	private final static Image SPACESHIP_IMAGE = new Image("images/witch.png");
 	private final static Image FLY_IMAGE = new Image("images/witch2.png");	
-	private final static double INITIAL_X = 200;
+	private final static double INITIAL_X = 100;
 	public final static int SPACESHIP_SPEED = 2;
 	public final static int ADDED_SPEED = 3;
 	public final static int jumpHeight = 100;
 
 	Spaceship(String name, double y){
-       	super(Spaceship.INITIAL_X, y,Spaceship.SPACESHIP_IMAGE);
+       	super(Spaceship.INITIAL_X, 200,Spaceship.SPACESHIP_IMAGE);
        	Random r = new Random();
 		this.name = name;
 		this.alive = true;

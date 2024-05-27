@@ -3,7 +3,7 @@ import java.util.Random;
 
 import javafx.scene.image.Image;
 
-class Building extends Sprite {
+public class Building extends Sprite {
 	private double speed;
 	private int position;
 	private boolean passed;

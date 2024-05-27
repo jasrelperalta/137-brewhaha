@@ -24,6 +24,7 @@ public class Client implements Runnable {
         void onMessageReceived(String message);
         void onPlayerListReceived(String[] playerNames); 
         void onPlayerReady(String playerName);
+        void onStart();
     }
 
     private ClientCallback callback;
@@ -137,7 +138,13 @@ public class Client implements Runnable {
                 if (callback != null) {
                     callback.onPlayerReady(new String(data).trim().substring(6));
                 }
-            }           
+            } else if (new String(data).trim().startsWith("start")){
+                //System.out.println(new String(data).trim().substring(6));
+                // Notify the callback about the ready player
+                if (callback != null) {
+                    callback.onStart();
+                }
+            }          
         }
     }
     

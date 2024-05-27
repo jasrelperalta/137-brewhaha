@@ -26,11 +26,13 @@ import networking.Client;
 import networking.Server;
 import networking.GameState;
 import networking.GameUser;
+import brewhaha.MultiplayerGame;
 
 public class MultiplayerScene {
 
 	private AnchorPane pane;
 	private Scene scene;
+    private Scene gameScene;
 	private GraphicsContext gc;
 	private Canvas canvas;
 	private Stage stage;
@@ -59,6 +61,7 @@ public class MultiplayerScene {
 		this.gc = canvas.getGraphicsContext2D();
 		this.stage = stage;
 		this.splashScene = splashScene;
+        //this.gameScene = gameScene;
         
         // initialize multiplayer
         this.initMultiplayer();
@@ -156,6 +159,18 @@ public class MultiplayerScene {
                     @Override
                     public void run() {
                         chatArea.appendText(playerName + " is ready\n");
+                    }
+                });
+            }
+            @Override
+            public void onStart() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Start game
+                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                        MultiplayerScene.this.stage.setScene(mScene.getScene());
+                        
                     }
                 });
             }
@@ -348,6 +363,18 @@ public class MultiplayerScene {
                                     }
                                 });
                             }
+                            @Override
+                            public void onStart() {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Start game
+                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+		                                MultiplayerScene.this.stage.setScene(mScene.getScene());
+                                        
+                                    }
+                                });
+                            }
                         });
                     }
                     // send the message to the server so it can be broadcasted to all clients
@@ -385,6 +412,25 @@ public class MultiplayerScene {
                     if (allReady) {
                         MultiplayerScene.this.server.startGame();
                         chatArea.appendText("Game starting...\n");
+                        // Start game
+                        /* MultiplayerScene.this.stage.setScene( MultiplayerScene.this.gameScene );	
+        
+                        GraphicsContext gc = MultiplayerScene.this.canvas.getGraphicsContext2D();
+                        
+                        GameTimer gameTimer = new GameTimer(gameScene, gc, MultiplayerScene.this.stage);
+                        gameTimer.start(); */
+
+                        // Display multiplayerGame
+                    
+                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+		                MultiplayerScene.this.stage.setScene(mScene.getScene());
+
+                        //stage.setScene( this.gameScene );	
+        
+                        //GraphicsContext gc = this.canvas.getGraphicsContext2D();
+                        
+                        //GameTimer gameTimer = new GameTimer(gameScene, gc, this.stage);
+                        //gameTimer.start();
                     }
                     
                 } else {
@@ -422,6 +468,18 @@ public class MultiplayerScene {
                                     @Override
                                     public void run() {
                                         chatArea.appendText(playerName + " is ready\n");
+                                    }
+                                });
+                            }
+                            @Override
+                            public void onStart() {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Start game
+                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+		                                MultiplayerScene.this.stage.setScene(mScene.getScene());
+                                        
                                     }
                                 });
                             }
