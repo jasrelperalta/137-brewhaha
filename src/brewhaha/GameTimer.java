@@ -118,7 +118,7 @@ class GameTimer extends AnimationTimer {
     private void moveSprites() {
         //this.moveSpaceship();
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    	executorService.schedule(this::moveSpaceship, 1, TimeUnit.SECONDS);
+    	executorService.schedule(this::moveSpaceship, 0, TimeUnit.SECONDS);
     
 		this.moveUFO();
     }
@@ -203,7 +203,7 @@ class GameTimer extends AnimationTimer {
 		
 		
 		// TOP BUILDING
-		yPos -= 600;
+		yPos -= 650;
 		this.buildings.add(new Building(xPos, yPos, r.nextInt(2) + 2, 0));
 		
 	}
