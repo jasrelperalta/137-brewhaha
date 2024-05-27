@@ -162,6 +162,18 @@ public class MultiplayerScene {
                     }
                 });
             }
+            @Override
+            public void onStart() {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Start game
+                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                        MultiplayerScene.this.stage.setScene(mScene.getScene());
+                        
+                    }
+                });
+            }
             });
             System.out.println("Client started on port " + this.port);
             // send connect message to server
@@ -351,6 +363,18 @@ public class MultiplayerScene {
                                     }
                                 });
                             }
+                            @Override
+                            public void onStart() {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Start game
+                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+		                                MultiplayerScene.this.stage.setScene(mScene.getScene());
+                                        
+                                    }
+                                });
+                            }
                         });
                     }
                     // send the message to the server so it can be broadcasted to all clients
@@ -444,6 +468,18 @@ public class MultiplayerScene {
                                     @Override
                                     public void run() {
                                         chatArea.appendText(playerName + " is ready\n");
+                                    }
+                                });
+                            }
+                            @Override
+                            public void onStart() {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Start game
+                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+		                                MultiplayerScene.this.stage.setScene(mScene.getScene());
+                                        
                                     }
                                 });
                             }
