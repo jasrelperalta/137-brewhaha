@@ -7,8 +7,8 @@ class Spaceship extends Sprite {
 	private String name;
 	private boolean alive;
 	private int score;
-	private int velocityY; //move bird up/down speed.
-    private int gravity;
+	private double velocityY; //move bird up/down speed.
+    private double gravity;
 
 	private final static Image SPACESHIP_IMAGE = new Image("images/witch.png");
 	private final static Image FLY_IMAGE = new Image("images/witch2.png");	
@@ -23,7 +23,7 @@ class Spaceship extends Sprite {
 		this.name = name;
 		this.alive = true;
 		this.velocityY = 0;
-		this.gravity =1;
+		this.gravity = 0.1;
 		//this.speed = SPACESHIP_SPEED;
 	}
 
@@ -47,7 +47,7 @@ class Spaceship extends Sprite {
     //Method for jumping
     public void fly(){
     	this.loadImage(FLY_IMAGE);
-        velocityY = -15; // JUMP HEIGHT
+        velocityY = -5; // JUMP HEIGHT
         
     }
     

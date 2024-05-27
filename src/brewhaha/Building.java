@@ -29,7 +29,7 @@ public class Building extends Sprite {
 		super(x, y, BUILDING_IMAGES[num]);
 		Random r = new Random();
 		this.position = position; // 0 if top, 1 if bottom
-		this.speed = 6;
+		this.speed = 1.75;
 		this.passed = false;
 	}
 	
