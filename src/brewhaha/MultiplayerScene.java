@@ -53,6 +53,8 @@ public class MultiplayerScene {
     private Button sendButton;
     private Button readyButton;
 
+    private MultiplayerGame game;
+
 
 	MultiplayerScene(Stage stage, Scene splashScene){
 		this.pane = new AnchorPane();
@@ -61,6 +63,7 @@ public class MultiplayerScene {
 		this.gc = canvas.getGraphicsContext2D();
 		this.stage = stage;
 		this.splashScene = splashScene;
+        
         //this.gameScene = gameScene;
         
         // initialize multiplayer
@@ -168,8 +171,8 @@ public class MultiplayerScene {
                     @Override
                     public void run() {
                         // Start game
-                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
-                        MultiplayerScene.this.stage.setScene(mScene.getScene());
+                        MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                        MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
                         
                     }
                 });
@@ -369,8 +372,8 @@ public class MultiplayerScene {
                                     @Override
                                     public void run() {
                                         // Start game
-                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
-		                                MultiplayerScene.this.stage.setScene(mScene.getScene());
+                                        MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                                        MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
                                         
                                     }
                                 });
@@ -422,9 +425,9 @@ public class MultiplayerScene {
 
                         // Display multiplayerGame
                     
-                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
-		                MultiplayerScene.this.stage.setScene(mScene.getScene());
-
+                        //MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                        //MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
+                        
                         //stage.setScene( this.gameScene );	
         
                         //GraphicsContext gc = this.canvas.getGraphicsContext2D();
@@ -477,9 +480,9 @@ public class MultiplayerScene {
                                     @Override
                                     public void run() {
                                         // Start game
-                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
-		                                MultiplayerScene.this.stage.setScene(mScene.getScene());
-                                        
+                                        MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                                        MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
+                        
                                     }
                                 });
                             }
