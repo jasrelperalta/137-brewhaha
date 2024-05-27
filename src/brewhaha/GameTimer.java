@@ -11,6 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 class GameTimer extends AnimationTimer {
 	private Stage stage;
@@ -113,8 +116,11 @@ class GameTimer extends AnimationTimer {
     
 	//Calls the move method of all the sprites
     private void moveSprites() {
-        this.moveSpaceship();
-        this.moveUFO();
+        //this.moveSpaceship();
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    	executorService.schedule(this::moveSpaceship, 1, TimeUnit.SECONDS);
+    
+		this.moveUFO();
     }
 	
     //Catches the left and right key presses for the spaceship's movement
