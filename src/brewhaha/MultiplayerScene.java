@@ -171,12 +171,27 @@ public class MultiplayerScene {
                     @Override
                     public void run() {
                         // Start game
-                        MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                        //MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
                         MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
+                        MultiplayerScene.this.game.startGame();
                         
                     }
                 });
             }
+            @Override
+            public void onBuildingReceived(Building building) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Start game
+                        //MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);   
+                        //MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
+                        MultiplayerScene.this.game.addBuilding(building);
+                        System.out.println("Building received");
+
+                    }
+                });
+            } 
             });
             System.out.println("Client started on port " + this.port);
             // send connect message to server
@@ -245,6 +260,8 @@ public class MultiplayerScene {
         } else {
             this.playerIsServer = false;
         }
+
+        MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer, MultiplayerScene.this.server, MultiplayerScene.this.client);
     }
 
     // create the chat area to display chat messages in AnchorPane
@@ -372,12 +389,26 @@ public class MultiplayerScene {
                                     @Override
                                     public void run() {
                                         // Start game
-                                        MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                                        //MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
                                         MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
-                                        
+                                        MultiplayerScene.this.game.startGame();
                                     }
                                 });
                             }
+                            @Override
+                            public void onBuildingReceived(Building building) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        MultiplayerScene.this.game.addBuilding(building);
+                                        System.out.println("Building received");
+                                        
+                                        //MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);   
+                                        //MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
+                                        //MultiplayerScene.this.game.startGame();
+                                    }
+                                });
+                            } 
                         });
                     }
                     // send the message to the server so it can be broadcasted to all clients
@@ -426,14 +457,9 @@ public class MultiplayerScene {
                         // Display multiplayerGame
                     
                         //MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
-                        //MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
+                        MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
+                        MultiplayerScene.this.game.startGame();
                         
-                        //stage.setScene( this.gameScene );	
-        
-                        //GraphicsContext gc = this.canvas.getGraphicsContext2D();
-                        
-                        //GameTimer gameTimer = new GameTimer(gameScene, gc, this.stage);
-                        //gameTimer.start();
                     }
                     
                 } else {
@@ -480,12 +506,24 @@ public class MultiplayerScene {
                                     @Override
                                     public void run() {
                                         // Start game
-                                        MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                                        //MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);   
                                         MultiplayerScene.this.stage.setScene(MultiplayerScene.this.game.getScene());
-                        
+                                        MultiplayerScene.this.game.startGame();
                                     }
                                 });
                             }
+                            @Override
+                            public void onBuildingReceived(Building building) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Start game
+                                        //MultiplayerScene.this.game = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);   
+                                        MultiplayerScene.this.game.addBuilding(building);
+                                        System.out.println("Building received");
+                                    }
+                                });
+                            } 
                         });
                     }
                     // send the message to the server so it can be broadcasted to all clients

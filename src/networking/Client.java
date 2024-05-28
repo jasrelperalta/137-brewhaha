@@ -1,5 +1,9 @@
 package networking;
 
+import brewhaha.Building;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.*;
 
 public class Client implements Runnable {
@@ -25,6 +29,7 @@ public class Client implements Runnable {
         void onPlayerListReceived(String[] playerNames); 
         void onPlayerReady(String playerName);
         void onStart();
+        void onBuildingReceived(Building building);
     }
 
     private ClientCallback callback;
@@ -107,9 +112,9 @@ public class Client implements Runnable {
             if (new String(data).trim().startsWith("chat")){
                 System.out.println(new String(data).trim().substring(5));
                 // Notify the callback about the new message
-            if (callback != null) {
-                callback.onMessageReceived(new String(data).trim().substring(5));
-            }
+                if (callback != null) {
+                    callback.onMessageReceived(new String(data).trim().substring(5));
+                }
 
             }
             else if (new String(data).trim().startsWith("player")){
@@ -144,7 +149,19 @@ public class Client implements Runnable {
                 if (callback != null) {
                     callback.onStart();
                 }
-            }          
+            } else{
+                 try {
+                    ByteArrayInputStream byteStream = new ByteArrayInputStream(data);
+                    ObjectInputStream objStream = new ObjectInputStream(byteStream);
+                    Building building = (Building) objStream.readObject();
+                    if (callback != null) {
+                        callback.onBuildingReceived(building);
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    System.out.println("Error deserializing building");
+                    e.printStackTrace();
+                }
+            }        
         }
     }
     

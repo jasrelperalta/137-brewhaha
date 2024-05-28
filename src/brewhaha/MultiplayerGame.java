@@ -18,7 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import networking.Client;
 import networking.Server;
-import brewhaha.GameTimer;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -51,9 +50,9 @@ public class MultiplayerGame{
     private boolean playerIsServer;
     private int port;
 
-    private GameTimer timer;
+    private MultiplayerGameTimer timer;
 
-    public MultiplayerGame(Stage stage, Scene splashScene, boolean playerIsServer){
+    public MultiplayerGame(Stage stage, Scene splashScene, boolean playerIsServer, Server server, Client client){
         this.root = new Group();
         this.scene = new Scene(root, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
         this.canvas = new Canvas(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
@@ -62,17 +61,25 @@ public class MultiplayerGame{
         this.stage = stage;
         this.splashScene = splashScene;
         this.playerIsServer = playerIsServer;
+        this.server = server;
+        this.client = client;
 
-        this.startGame();
+
+        //this.startGame();
     }
     
     public void startGame(){
         // create the game timer
-        this.timer = new GameTimer(scene, gc, stage);
+        this.timer = new MultiplayerGameTimer(scene, gc, stage, this.server, this.client, this.playerIsServer);
         // start the game
         System.out.println("Starting multiplayer game");
         // start the game timer
         this.timer.start();
+    }
+
+    public void addBuilding(Building building){
+        // add the building to the list of buildings
+        this.timer.addBuilding(building);
     }
 
     // get the scene

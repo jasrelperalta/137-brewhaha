@@ -51,11 +51,16 @@ public class Server implements Runnable {
 
     // run method for the server
     public void run(){
-        this.state = GameState.WAITING_FOR_PLAYERS;
-        System.out.println("Server waiting for players");
+
+        if(this.state == GameState.INITIALIZING_SERVER){
+            this.state = GameState.WAITING_FOR_PLAYERS;
+            System.out.println("Server waiting for players");
         
-        // add the server to the player list
-        addPlayer(new GameUser(this.name, socket.getInetAddress(), socket.getPort()));
+            // add the server to the player list
+            addPlayer(new GameUser(this.name, socket.getInetAddress(), socket.getPort()));
+        
+        }
+        
         
         // magical while loop
         while (true){
@@ -63,58 +68,60 @@ public class Server implements Runnable {
             DatagramPacket packet = new DatagramPacket(data, data.length);
             try {
                 socket.receive(packet);
+                
+                if(this.state == GameState.WAITING_FOR_PLAYERS){
+                    // if the packet is a connect packet, add the player to the player list
+                    if (new String(packet.getData()).trim().startsWith("connect")){
+                        String playerName = new String(data).trim().substring(7);
+                        System.out.println(playerName + " connected");
+                        // add the player to the player list
+                        addPlayer(new GameUser(playerName, packet.getAddress(), packet.getPort()));
+                        // print the number of players
+                        System.out.println("Number of players: " + players.size());
+                        // Notify the callback about the new player
+                        if (callback != null) {
+                            callback.onPlayerConnected(playerName);
+                        }
 
-                // if the packet is a connect packet, add the player to the player list
-                if (new String(packet.getData()).trim().startsWith("connect")){
-                    String playerName = new String(data).trim().substring(7);
-                    System.out.println(playerName + " connected");
-                    // add the player to the player list
-                    addPlayer(new GameUser(playerName, packet.getAddress(), packet.getPort()));
-                    // print the number of players
-                    System.out.println("Number of players: " + players.size());
-                    // Notify the callback about the new player
-                    if (callback != null) {
-                        callback.onPlayerConnected(playerName);
+                        // Convert the player list to a string
+                        StringBuilder playerListString = new StringBuilder("player ");
+                        for (GameUser p : players) {
+                            playerListString.append(p.getName()).append(",");
+                        }
+                        playerListString.deleteCharAt(playerListString.length() - 1); // Remove the trailing comma
+
+                        // Send the player list to all clients
+                        sendToClients(playerListString.toString().getBytes());
                     }
 
-                    // Convert the player list to a string
-                    StringBuilder playerListString = new StringBuilder("player ");
-                    for (GameUser p : players) {
-                        playerListString.append(p.getName()).append(",");
-                    }
-                    playerListString.deleteCharAt(playerListString.length() - 1); // Remove the trailing comma
-
-                    // Send the player list to all clients
-                    sendToClients(playerListString.toString().getBytes());
-                }
-
-                // if the packet is a chat message, send it to all clients
-                else if (new String(packet.getData()).trim().startsWith("chat")){
-                    String chatMessage = new String(data).trim().substring(5);
-                    sendToClients(packet.getData());
-                    // Notify the callback about the new message
-                    if (callback != null) {
-                        callback.onChatMessageReceived(chatMessage);
-                    }
-                }
-
-                // if the packet is a ready packet, send it to all clients
-                else if (new String(packet.getData()).trim().startsWith("ready")){
-                    String playerName = new String(data).trim().substring(6);
-                    sendToClients(packet.getData());
-                    // Update the player list
-                    for (GameUser p : players) {
-                        System.out.println("hanapin si " + p.getName().trim());
-                        System.out.println(p.getName().trim().equals(playerName.trim()));
-                        if (p.getName().trim().equals(playerName.trim())) {
-                            System.out.println("ready");
-                            System.out.println(p.getName());
-                            p.setReady(true);
+                    // if the packet is a chat message, send it to all clients
+                    else if (new String(packet.getData()).trim().startsWith("chat")){
+                        String chatMessage = new String(data).trim().substring(5);
+                        sendToClients(packet.getData());
+                        // Notify the callback about the new message
+                        if (callback != null) {
+                            callback.onChatMessageReceived(chatMessage);
                         }
                     }
-                    // Notify the callback about the ready player
-                    if (callback != null) {
-                        callback.onPlayerReady(playerName);
+
+                    // if the packet is a ready packet, send it to all clients
+                    else if (new String(packet.getData()).trim().startsWith("ready")){
+                        String playerName = new String(data).trim().substring(6);
+                        sendToClients(packet.getData());
+                        // Update the player list
+                        for (GameUser p : players) {
+                            System.out.println("hanapin si " + p.getName().trim());
+                            System.out.println(p.getName().trim().equals(playerName.trim()));
+                            if (p.getName().trim().equals(playerName.trim())) {
+                                System.out.println("ready");
+                                System.out.println(p.getName());
+                                p.setReady(true);
+                            }
+                        }
+                        // Notify the callback about the ready player
+                        if (callback != null) {
+                            callback.onPlayerReady(playerName);
+                        }
                     }
                 }
             } catch (IOException e) {

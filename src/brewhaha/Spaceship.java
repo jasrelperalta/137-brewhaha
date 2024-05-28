@@ -41,7 +41,7 @@ class Spaceship extends Sprite {
     
     //Deducts a damage to the spaceship's strength
     void getDamage(int damage) {
-    	this.die();
+    	//this.die();
     }
 	
     //Method for jumping
@@ -72,7 +72,7 @@ class Spaceship extends Sprite {
         
         if(this.yPos > 600) {
         	System.out.println("yPOS: "+this.yPos);
-        	this.die();
+        	//this.die();
         }
 	}
 	

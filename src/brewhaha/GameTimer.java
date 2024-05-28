@@ -1,4 +1,5 @@
 package brewhaha;
+import java.lang.reflect.Array;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -10,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -21,12 +23,13 @@ class GameTimer extends AnimationTimer {
 	private GraphicsContext gc;
 	private Spaceship witch;
 	private Scene scene;
-	private ArrayList<Building> buildings;
+	protected ArrayList<Building> buildings;
 
 	private static boolean shoot;
 	private double backgroundx;
 	private double time;
 	private int win;	//1 if the player wins, 0 if lose
+	private boolean newBuilding;
 	
 	private Image background = new Image( "images/bg.jpg" );
 	public final static int HEIGHT_WITCH = 60;
@@ -44,7 +47,8 @@ class GameTimer extends AnimationTimer {
     	this.buildings = new ArrayList<Building>();
     	this.startSpawn = System.nanoTime();
     	this.prepareActionHandlers();
-    	this.spawnUfo();
+    	this.spawnBuilding();
+		this.newBuilding = false;
     }
     
     @Override
@@ -72,7 +76,7 @@ class GameTimer extends AnimationTimer {
     	this.witch.die();
     }
     
-    private void redrawBackgroundImage() {
+    protected void redrawBackgroundImage() {
 		// clear the canvas
         this.gc.clearRect(0, 0, Game.WINDOW_WIDTH,Game.WINDOW_HEIGHT);
 
@@ -87,25 +91,27 @@ class GameTimer extends AnimationTimer {
     }
     
   //Method for spawning a power-up every 10secs and 3 UFOs every 5secs
-    private void autoSpawn(long currentNanoTime) {
+    protected void autoSpawn(long currentNanoTime) {
     	double spawnElapsedTime = (currentNanoTime - this.startSpawn) / 300000000.0;
        
         
         // spawn UFO
         if(spawnElapsedTime > GameTimer.SPAWN_DELAY) {
-        	this.spawnUfo();
+        	this.spawnBuilding();
         	this.startSpawn = System.nanoTime();
         }
     }    
 
-   
+   	protected List<Building> getBuildings() {
+    	return buildings;
+	}
     
     //Time setter
     void setTime(double time) {
     	this.time = time;
     }
 
-	private void renderSprites() {
+	protected void renderSprites() {
     	// draw Spaceship
         this.witch.render(this.gc);
         
@@ -113,9 +119,13 @@ class GameTimer extends AnimationTimer {
         for (Building building : this.buildings )
         	building.render( this.gc );
     }
+
+	protected void setBuildings(ArrayList<Building> buildings) {
+		this.buildings = buildings;
+	}
     
 	//Calls the move method of all the sprites
-    private void moveSprites() {
+    protected void moveSprites() {
         //this.moveSpaceship();
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     	executorService.schedule(this::moveSpaceship, 0, TimeUnit.SECONDS);
@@ -148,6 +158,10 @@ class GameTimer extends AnimationTimer {
             }
         });
     }
+
+	protected void addBuilding(Building building) {
+		this.buildings.add(building);
+	}
 	
     //Gets called in handle() to move the spaceship
 	private void moveSpaceship() {
@@ -162,7 +176,7 @@ class GameTimer extends AnimationTimer {
 	
 	
 	//Method for drawing the player's score in the status bar
-	private void drawScore(){
+	protected void drawScore(){
 		this.gc.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
 		this.gc.setFill(Color.YELLOW);
 		this.gc.fillText("SCORE:", 460, 30);
@@ -171,7 +185,10 @@ class GameTimer extends AnimationTimer {
 		this.gc.fillText(witch.getScore()+"", 550, 30);
 	}
 	
-	
+	// witch getter
+	protected Spaceship getWitch() {
+		return this.witch;
+	}
 
      //If they are outside the screen, they get removed from the ArrayList
 	private void moveUFO() {
@@ -191,7 +208,7 @@ class GameTimer extends AnimationTimer {
 	}
 	
 	
-	private void spawnUfo(){
+	private void spawnBuilding(){
 		System.out.println("SPAWNING");
 		int yPos, xPos = GameTimer.XPOS;
 		Random r = new Random();
@@ -205,12 +222,21 @@ class GameTimer extends AnimationTimer {
 		// TOP BUILDING
 		yPos -= 650;
 		this.buildings.add(new Building(xPos, yPos, r.nextInt(2) + 2, 0));
-		
+		this.newBuilding = true;
 	}
 
+	// newBuilding setter
+	protected void setNewBuilding() {
+		this.newBuilding = false;
+	}
+
+	// newBuilding getter
+	protected boolean getNewBuilding() {
+		return this.newBuilding;
+	}
 	
 	//Method for displaying the Game Over scene
-	private void setGameOver(int type) {
+	protected void setGameOver(int type) {
 		GameOverScene gScene = new GameOverScene(type, witch.getScore());
 		this.stage.setScene(gScene.getScene());
 	}
