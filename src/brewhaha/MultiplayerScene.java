@@ -108,7 +108,7 @@ public class MultiplayerScene {
                 }
             });
         }
-    });
+        });
             
             System.out.println("Server started at " + server.getSocket().getLocalAddress() + " on port " + this.port);
             this.server.setState(GameState.WAITING_FOR_PLAYERS);
@@ -222,6 +222,18 @@ public class MultiplayerScene {
         Optional<String> nameResult = nameDialog.showAndWait();
         if (nameResult.isPresent()) {
             this.playerName = nameResult.get();
+        }
+
+        TextInputDialog ipDialog = new TextInputDialog();
+        ipDialog.setTitle("Enter IP Address");
+        ipDialog.setHeaderText("Please enter IP Address:");
+        Optional<String> ipAddressResult = ipDialog.showAndWait();
+        if (ipAddressResult.isPresent()) {
+            try {
+                this.serverAddress = InetAddress.getByName(ipAddressResult.get());
+            } catch (UnknownHostException e) {
+                System.out.println("Error getting the ip address");
+            }
         }
 
         //System.out.println("here");
