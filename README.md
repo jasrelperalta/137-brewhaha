@@ -59,3 +59,6 @@ Lab Instructor: Elijah Nicholas Isungga
       ]
   }
   ```
+
+  ## Note
+  Link to prior repository: [Old Brewhaha Repo](https://github.com/jasrelperalta/brewhaha)
