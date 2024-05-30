@@ -23,7 +23,7 @@ class Witch extends Sprite {
 		this.name = name;
 		this.alive = true;
 		this.velocityY = 0;
-		this.gravity = 0.075;
+		this.gravity = 0.06;
 		//this.speed = SPACESHIP_SPEED;
 	}
 
@@ -47,7 +47,7 @@ class Witch extends Sprite {
     //Method for jumping
     public void fly(){
     	this.loadImage(FLY_IMAGE);
-        velocityY = -5; // JUMP HEIGHT
+        velocityY = -3; // JUMP HEIGHT
         
     }
     
@@ -65,13 +65,12 @@ class Witch extends Sprite {
     //Method for moving
     void move() {
     	//bird
-        velocityY = Math.max((gravity + velocityY), -3.5);
-        this.yPos += velocityY;
+        velocityY = Math.max((gravity + velocityY), -2.5);
+        this.yPos += velocityY; 
         this.yPos = Math.max(this.yPos, 0); //apply gravity to current bird.y, limit the bird.y to top of the canvas
         this.loadImage(SPACESHIP_IMAGE);
         
         if(this.yPos > 600) {
-        	System.out.println("yPOS: "+this.yPos);
         	this.die();
         }
 	}

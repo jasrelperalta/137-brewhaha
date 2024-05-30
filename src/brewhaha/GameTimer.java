@@ -192,13 +192,11 @@ class GameTimer extends AnimationTimer {
 	
 	
 	private void spawnUfo(){
-		System.out.println("SPAWNING");
 		int yPos, xPos = GameTimer.XPOS;
 		Random r = new Random();
 		
 		// BOTTOM BUILDING
 		yPos = r.nextInt(Game.WINDOW_HEIGHT-100) + 100;
-		System.out.println(yPos);
 		this.buildings.add(new Building(xPos, yPos, r.nextInt(2), 1));
 		
 		

@@ -70,7 +70,7 @@ public class MultiplayerGame{
         // create the game timer
         this.timer = new GameTimer(scene, gc, stage);
         // start the game
-        System.out.println("Starting multiplayer game");
+        // System.out.println("Starting multiplayer game");
         // start the game timer
         this.timer.start();
     }

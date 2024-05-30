@@ -103,9 +103,9 @@ public class Client implements Runnable {
         System.out.println("Client running");
         while (true){
             byte[] data = receivePacket();
-            System.out.println(new String(data).trim());
+            // System.out.println(new String(data).trim());
             if (new String(data).trim().startsWith("chat")){
-                System.out.println(new String(data).trim().substring(5));
+                // System.out.println(new String(data).trim().substring(5));
                 // Notify the callback about the new message
             if (callback != null) {
                 callback.onMessageReceived(new String(data).trim().substring(5));
@@ -113,19 +113,19 @@ public class Client implements Runnable {
 
             }
             else if (new String(data).trim().startsWith("player")){
-                System.out.println(new String(data).trim().substring(7));
+                // System.out.println(new String(data).trim().substring(7));
                 
                 // Notify the callback about the new player
                 String receivedMessage = new String(data).trim();
                 String playerListString = receivedMessage.substring(7);
-                System.out.println("playerListString");
+
                 // Parse the player list string into an array
                 String[] playerNames = playerListString.split(",");
 
                 //print the player list
-                for (String p : playerNames) {
-                    System.out.println(p);
-                }
+                // for (String p : playerNames) {
+                //     System.out.println(p);
+                // }
                 
                 // Notify the callback about the new player list
                 if (callback != null) {
@@ -133,7 +133,7 @@ public class Client implements Runnable {
                 }
             }
             else if (new String(data).trim().startsWith("ready")){
-                System.out.println(new String(data).trim().substring(6));
+                // System.out.println(new String(data).trim().substring(6));
                 // Notify the callback about the ready player
                 if (callback != null) {
                     callback.onPlayerReady(new String(data).trim().substring(6));
@@ -144,7 +144,12 @@ public class Client implements Runnable {
                 if (callback != null) {
                     callback.onStart();
                 }
-            }          
+            } 
+            else if (new String(data).trim().startsWith("die")){
+                String playerName = new String(data).trim().substring(4);
+
+                
+            }
         }
     }
     

@@ -84,7 +84,7 @@ public class MultiplayerScene {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    playerList.appendText(playerName + "\n");
+                    playerList.appendText(playerName.trim() + "\n");
                 }
             });
         }
@@ -179,7 +179,7 @@ public class MultiplayerScene {
             // send connect message to server
             try {
                 client.connect(InetAddress.getLocalHost(), this.port, this.playerName);
-                System.out.println("Connect message sent");
+                // System.out.println("Connect message sent");
             } catch (UnknownHostException e) {
                 System.out.println("Error sending connect message");
             }

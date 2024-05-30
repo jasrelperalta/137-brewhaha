@@ -67,11 +67,11 @@ public class Server implements Runnable {
                 // if the packet is a connect packet, add the player to the player list
                 if (new String(packet.getData()).trim().startsWith("connect")){
                     String playerName = new String(data).trim().substring(7);
-                    System.out.println(playerName + " connected");
+                    // System.out.println(playerName + " connected");
                     // add the player to the player list
                     addPlayer(new GameUser(playerName, packet.getAddress(), packet.getPort()));
                     // print the number of players
-                    System.out.println("Number of players: " + players.size());
+                    // System.out.println("Number of players: " + players.size());
                     // Notify the callback about the new player
                     if (callback != null) {
                         callback.onPlayerConnected(playerName);
@@ -104,11 +104,7 @@ public class Server implements Runnable {
                     sendToClients(packet.getData());
                     // Update the player list
                     for (GameUser p : players) {
-                        System.out.println("hanapin si " + p.getName().trim());
-                        System.out.println(p.getName().trim().equals(playerName.trim()));
                         if (p.getName().trim().equals(playerName.trim())) {
-                            System.out.println("ready");
-                            System.out.println(p.getName());
                             p.setReady(true);
                         }
                     }
@@ -137,7 +133,7 @@ public class Server implements Runnable {
     public void sendToClients(byte[] data){
         for (int i = 1; i < players.size(); i++){
             GameUser player = players.get(i);
-            System.out.println("Sending to " + player.getName() + " at " + player.getAddress() + " on port " + player.getPort());
+            // System.out.println("Sending to " + player.getName() + " at " + player.getAddress() + " on port " + player.getPort());
             DatagramPacket packet = new DatagramPacket(data, data.length, player.getAddress(), player.getPort());
             try {
                 socket.send(packet);
