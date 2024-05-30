@@ -78,6 +78,7 @@ class GameTimer extends AnimationTimer {
     	this.prepareActionHandlers();
     	this.spawnUfo();
 		this.server = server;
+		this.isMultiplayer = 1;
     }
 
 	// Client Mulitplayer
@@ -93,6 +94,7 @@ class GameTimer extends AnimationTimer {
     	this.prepareActionHandlers();
     	this.spawnUfo();
 		this.client = client;
+		this.isMultiplayer = 1;
     }
     
     @Override
@@ -259,11 +261,13 @@ class GameTimer extends AnimationTimer {
 	
 	//Method for displaying the Game Over scene
 	private void setGameOver(int type, int isMultiplayer) {
+		System.out.println(isMultiplayer);
 		if (isMultiplayer == 0) {
 			GameOverScene gScene = new GameOverScene(type, witch.getScore());
 			this.stage.setScene(gScene.getScene());
 		}
 		else {
+			System.out.print("eyy");
 			if (isServer == 1) {
 				System.out.println("DEAD: " + playerName);
 				System.out.println("DEAD: " + playerName);

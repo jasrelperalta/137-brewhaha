@@ -63,7 +63,6 @@ public class MultiplayerGame{
         this.splashScene = splashScene;
         this.playerIsServer = playerIsServer;
         this.server = server;
-
         this.startGameServer(server);
     }
     
@@ -85,7 +84,7 @@ public class MultiplayerGame{
         // create the game timer
         this.timer = new GameTimer(scene, gc, stage, 1, port, server);
         // start the game
-        System.out.println("Starting multiplayer game");
+        System.out.println("Starting SERVER multiplayer game");
         // start the game timer
         this.timer.start();
     }
@@ -93,7 +92,7 @@ public class MultiplayerGame{
         // create the game timer
         this.timer = new GameTimer(scene, gc, stage, 1, port, client);
         // start the game
-        System.out.println("Starting multiplayer game");
+        System.out.println("Starting CLIENT multiplayer game");
         // start the game timer
         this.timer.start();
     }
