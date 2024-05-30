@@ -32,7 +32,7 @@ class GameTimer extends AnimationTimer {
 	public final static int HEIGHT_WITCH = 60;
 	public final static int XPOS = 790;
 	public final static int BACKGROUND_SPEED = 1;
-	public final static double SPAWN_DELAY = 5.00;
+	public final static double SPAWN_DELAY = 11.00;
     
     GameTimer(Scene scene, GraphicsContext gc, Stage stage) {
     	Random r = new Random();
