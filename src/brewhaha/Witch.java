@@ -3,7 +3,7 @@ package brewhaha;
 import java.util.Random;
 import javafx.scene.image.Image;
 
-class Spaceship extends Sprite {
+class Witch extends Sprite {
 	private String name;
 	private boolean alive;
 	private int score;
@@ -17,13 +17,13 @@ class Spaceship extends Sprite {
 	public final static int ADDED_SPEED = 3;
 	public final static int jumpHeight = 100;
 
-	Spaceship(String name, double y){
-       	super(Spaceship.INITIAL_X, 200,Spaceship.SPACESHIP_IMAGE);
+	Witch(String name, double y){
+       	super(Witch.INITIAL_X, 200,Witch.SPACESHIP_IMAGE);
        	Random r = new Random();
 		this.name = name;
 		this.alive = true;
 		this.velocityY = 0;
-		this.gravity = 0.1;
+		this.gravity = 0.075;
 		//this.speed = SPACESHIP_SPEED;
 	}
 
@@ -65,7 +65,7 @@ class Spaceship extends Sprite {
     //Method for moving
     void move() {
     	//bird
-        velocityY += gravity;
+        velocityY = Math.max((gravity + velocityY), -3.5);
         this.yPos += velocityY;
         this.yPos = Math.max(this.yPos, 0); //apply gravity to current bird.y, limit the bird.y to top of the canvas
         this.loadImage(SPACESHIP_IMAGE);

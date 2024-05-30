@@ -146,7 +146,7 @@ public class MultiplayerScene {
                     public void run() {
                         playerList.clear();
                         for (String playerName : playerNames) {
-                            playerList.appendText(playerName + "\n");
+                            playerList.appendText(playerName.trim() + "\n");
                         }
                     }
                 });
@@ -263,7 +263,7 @@ public class MultiplayerScene {
     public void updatePlayerListFromServer() {
         playerList.clear();
         for (GameUser player : this.server.getPlayers()) {
-            playerList.appendText(player.getName() + "\n");
+            playerList.appendText(player.getName().trim() + "\n");
         }
     }
 
