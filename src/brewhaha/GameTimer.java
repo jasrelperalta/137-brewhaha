@@ -1,19 +1,29 @@
 package brewhaha;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import networking.Client;
+import networking.GameUser;
+import networking.Server;
+import networking.Server.ServerCallback;
 import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import javax.swing.plaf.TreeUI;
 
 class GameTimer extends AnimationTimer {
 	private Stage stage;
@@ -29,12 +39,20 @@ class GameTimer extends AnimationTimer {
 	private int win;	//1 if the player wins, 0 if lose
 	
 	private Image background = new Image( "images/bg3.png" );
+	private int isMultiplayer;
+	private String playerName;
+	private int port;
+	private Client client;
+	private Server server;
+	private int isServer;
+
 	public final static int HEIGHT_WITCH = 60;
 	public final static int XPOS = 790;
 	public final static int BACKGROUND_SPEED = 1;
 	public final static double SPAWN_DELAY = 5.00;
     
-    GameTimer(Scene scene, GraphicsContext gc, Stage stage) {
+	// Single
+    GameTimer(Scene scene, GraphicsContext gc, Stage stage, int isMultiplayer) {
     	Random r = new Random();
     	this.gc = gc;
     	this.scene = scene;    	
@@ -45,6 +63,36 @@ class GameTimer extends AnimationTimer {
     	this.startSpawn = System.nanoTime();
     	this.prepareActionHandlers();
     	this.spawnUfo();
+    }
+
+	// Server Multiplayer
+    GameTimer(Scene scene, GraphicsContext gc, Stage stage, int isMultiplayer, int isServer, Server server) {
+    	Random r = new Random();
+    	this.gc = gc;
+    	this.scene = scene;    	
+    	this.stage = stage;
+    	this.win = 0;
+    	this.witch = new Witch("Apollo", r.nextInt((Game.WINDOW_HEIGHT-GameTimer.HEIGHT_WITCH)-(50))+50);
+    	this.buildings = new ArrayList<Building>();
+    	this.startSpawn = System.nanoTime();
+    	this.prepareActionHandlers();
+    	this.spawnUfo();
+		this.server = server;
+    }
+
+	// Client Mulitplayer
+    GameTimer(Scene scene, GraphicsContext gc, Stage stage, int isMultiplayer, int isServer, Client client) {
+    	Random r = new Random();
+    	this.gc = gc;
+    	this.scene = scene;    	
+    	this.stage = stage;
+    	this.win = 0;
+    	this.witch = new Witch("Apollo", r.nextInt((Game.WINDOW_HEIGHT-GameTimer.HEIGHT_WITCH)-(50))+50);
+    	this.buildings = new ArrayList<Building>();
+    	this.startSpawn = System.nanoTime();
+    	this.prepareActionHandlers();
+    	this.spawnUfo();
+		this.client = client;
     }
     
     @Override
@@ -62,7 +110,7 @@ class GameTimer extends AnimationTimer {
         //calls the method to set the game over scene once the spaceship died
         if(!this.witch.isAlive()) {
         	this.stop();
-        	this.setGameOver(this.win);		// draw Game Over text
+        	this.setGameOver(this.win, this.isMultiplayer);		// draw Game Over text
         }
     }
     
@@ -210,8 +258,33 @@ class GameTimer extends AnimationTimer {
 
 	
 	//Method for displaying the Game Over scene
-	private void setGameOver(int type) {
-		GameOverScene gScene = new GameOverScene(type, witch.getScore());
-		this.stage.setScene(gScene.getScene());
+	private void setGameOver(int type, int isMultiplayer) {
+		if (isMultiplayer == 0) {
+			GameOverScene gScene = new GameOverScene(type, witch.getScore());
+			this.stage.setScene(gScene.getScene());
+		}
+		else {
+			if (isServer == 1) {
+				System.out.println("DEAD: " + playerName);
+				System.out.println("DEAD: " + playerName);
+				this.client.getGameUser().setDead(true);
+				System.out.println("DEAD: " + playerName);
+			}
+			else {			
+				String deathMessage = "die " + playerName;
+				try {
+					System.out.println("DEAD: " + playerName);
+					System.out.println("DEAD: " + playerName);
+					this.client.sendPacket(deathMessage.getBytes(), InetAddress.getLocalHost(), port);
+					this.client.getGameUser().setDead(true);
+					System.out.println("DEAD: " + playerName);
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+				MultiplayerGameOverScene gScene = new MultiplayerGameOverScene(type, witch.getScore(), client);
+				this.stage.setScene(gScene.getScene());
+			}
+		}
 	}
 }
+

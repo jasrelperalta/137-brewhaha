@@ -168,7 +168,7 @@ public class MultiplayerScene {
                     @Override
                     public void run() {
                         // Start game
-                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer, MultiplayerScene.this.client);
                         MultiplayerScene.this.stage.setScene(mScene.getScene());
                         
                     }
@@ -369,7 +369,7 @@ public class MultiplayerScene {
                                     @Override
                                     public void run() {
                                         // Start game
-                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer, MultiplayerScene.this.client);
 		                                MultiplayerScene.this.stage.setScene(mScene.getScene());
                                         
                                     }
@@ -391,10 +391,8 @@ public class MultiplayerScene {
         this.readyButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent arg0) {
                 // send the ready message
-                //chatArea.appendText(playerName + " is ready\n");
                 String readyMessage = "ready " + playerName;
                 if (playerIsServer) {
-                    //System.out.println(MultiplayerScene.this.server.getName());
                     chatArea.appendText(playerName + " is ready\n");
                     MultiplayerScene.this.server.sendToClients(readyMessage.getBytes());
 
@@ -412,27 +410,11 @@ public class MultiplayerScene {
                     if (allReady) {
                         MultiplayerScene.this.server.startGame();
                         chatArea.appendText("Game starting...\n");
-                        // Start game
-                        /* MultiplayerScene.this.stage.setScene( MultiplayerScene.this.gameScene );	
-        
-                        GraphicsContext gc = MultiplayerScene.this.canvas.getGraphicsContext2D();
-                        
-                        GameTimer gameTimer = new GameTimer(gameScene, gc, MultiplayerScene.this.stage);
-                        gameTimer.start(); */
-
-                        // Display multiplayerGame
-                    
-                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer, MultiplayerScene.this.server);
 		                MultiplayerScene.this.stage.setScene(mScene.getScene());
 
-                        //stage.setScene( this.gameScene );	
-        
-                        //GraphicsContext gc = this.canvas.getGraphicsContext2D();
-                        
-                        //GameTimer gameTimer = new GameTimer(gameScene, gc, this.stage);
-                        //gameTimer.start();
                     }
-                    
+                
                 } else {
                     // instantiate the client if it doesn't exist
                     if (MultiplayerScene.this.client == null){
@@ -477,7 +459,7 @@ public class MultiplayerScene {
                                     @Override
                                     public void run() {
                                         // Start game
-                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer);
+                                        MultiplayerGame mScene = new MultiplayerGame(MultiplayerScene.this.stage, MultiplayerScene.this.splashScene, MultiplayerScene.this.playerIsServer, MultiplayerScene.this.client);
 		                                MultiplayerScene.this.stage.setScene(mScene.getScene());
                                         
                                     }

@@ -37,7 +37,6 @@ public class Client implements Runnable {
             this.serverPort = serverPort;
             this.callback = callback;
             this.player = new GameUser(name, serverAddress, serverPort);
-            //System.out.println("Client created server address: " + serverAddress + " server port: " + serverPort);
         } catch (Exception e) {
             System.out.println("Error creating client socket");
         }
@@ -105,7 +104,6 @@ public class Client implements Runnable {
             byte[] data = receivePacket();
             System.out.println(new String(data).trim());
             if (new String(data).trim().startsWith("chat")){
-                System.out.println(new String(data).trim().substring(5));
                 // Notify the callback about the new message
             if (callback != null) {
                 callback.onMessageReceived(new String(data).trim().substring(5));
@@ -118,7 +116,6 @@ public class Client implements Runnable {
                 // Notify the callback about the new player
                 String receivedMessage = new String(data).trim();
                 String playerListString = receivedMessage.substring(7);
-                System.out.println("playerListString");
                 // Parse the player list string into an array
                 String[] playerNames = playerListString.split(",");
 
@@ -144,7 +141,7 @@ public class Client implements Runnable {
                 if (callback != null) {
                     callback.onStart();
                 }
-            }          
+            }
         }
     }
     

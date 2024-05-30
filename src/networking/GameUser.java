@@ -17,6 +17,12 @@ public class GameUser {
     private int score;
     private int serverId;
     private boolean ready;
+    private boolean dead;
+    private int place;
+
+    private int winner; 
+    // set to 0 if winner, checks if other players are alive, if 0, then siya na lang natitira
+    // kumbaga ito yung place niya
 
     // constructor
     public GameUser(String name, InetAddress address, int port){
@@ -25,6 +31,8 @@ public class GameUser {
         this.port = port;
         this.score = 0;
         this.ready = false;
+        this.dead = false;
+        this.place = 0;
     }
 
     // getter for the player name
@@ -66,5 +74,34 @@ public class GameUser {
     // getter if the player is ready
     public boolean isReady(){
         return this.ready;
+    }
+
+    public void setDead(boolean dead){
+        this.dead = dead;
+    }
+
+    public boolean isDead(){
+        return this.dead;
+    }
+
+    public void setWinner(int winner){
+        this.winner = winner;
+    }
+
+    public boolean isWinner(){
+        if (this.winner != 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public void setPlace(int place){
+        this.place = place;
+    }
+
+    public int getPlace(){
+        return this.place;
     }
 }

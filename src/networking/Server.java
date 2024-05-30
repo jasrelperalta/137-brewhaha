@@ -30,6 +30,9 @@ public class Server implements Runnable {
     // Server callback
     private ServerCallback callback;
 
+    // GameUser object for the player
+    private GameUser player;
+
     // constructor
     public Server(int port, String name, ServerCallback callback){
         this.state = GameState.INITIALIZING_SERVER;
@@ -44,6 +47,7 @@ public class Server implements Runnable {
             e.printStackTrace();
         }
 
+        this.player = new GameUser(this.name, socket.getInetAddress(), socket.getPort());
         // start the server thread
         t.start();
         System.out.println("Server thread started");
@@ -54,8 +58,8 @@ public class Server implements Runnable {
         this.state = GameState.WAITING_FOR_PLAYERS;
         System.out.println("Server waiting for players");
         
-        // add the server to the player list
-        addPlayer(new GameUser(this.name, socket.getInetAddress(), socket.getPort()));
+        // add server to player list
+        addPlayer(this.player);
         
         // magical while loop
         while (true){
@@ -116,6 +120,31 @@ public class Server implements Runnable {
                     if (callback != null) {
                         callback.onPlayerReady(playerName);
                     }
+                }else if (new String(packet.getData()).trim().startsWith("die")){
+                    String playerName = new String(data).trim().substring(4);
+                    // Update the player list
+                    for (GameUser p : players) {
+                        System.out.println(p.getName().trim().equals(playerName.trim()));
+                        if (p.getName().trim().equals(playerName.trim())) {
+                            System.out.println("dead");
+                            System.out.println(p.getName());
+                            p.setDead(true);
+                        }
+                    }
+                }else if (new String(packet.getData()).trim().startsWith("place")){
+                    String playerName = new String(data).trim().substring(6);
+                    int counter = 1;
+                    for (GameUser p : players) {
+                        if (!p.getName().trim().equals(playerName.trim()) && p.isDead()) {
+                            counter += 1;
+                        }
+                    }
+                    for (GameUser p : players) {
+                        int totalPlayers = players.size();
+                        if (p.getName().trim().equals(playerName.trim()) && p.isDead()) {
+                            p.setPlace(totalPlayers - counter);
+                        }
+                    }
                 }
             } catch (IOException e) {
                 System.out.println("Error receiving packet");
@@ -169,6 +198,10 @@ public class Server implements Runnable {
     // close the server
     public void close(){
         socket.close();
+    }
+
+    public GameUser getGameUser(){
+        return player;
     }
 
     public DatagramSocket getSocket() {

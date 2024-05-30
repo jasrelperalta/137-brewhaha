@@ -109,7 +109,7 @@ public class Game {
         
         GraphicsContext gc = this.canvas.getGraphicsContext2D();
         
-        GameTimer gameTimer = new GameTimer(gameScene, gc, this.stage);
+        GameTimer gameTimer = new GameTimer(gameScene, gc, this.stage, 0);
         gameTimer.start();
         
 	}	

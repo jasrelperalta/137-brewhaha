@@ -53,7 +53,7 @@ public class MultiplayerGame{
 
     private GameTimer timer;
 
-    public MultiplayerGame(Stage stage, Scene splashScene, boolean playerIsServer){
+    public MultiplayerGame(Stage stage, Scene splashScene, boolean playerIsServer, Server server){
         this.root = new Group();
         this.scene = new Scene(root, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
         this.canvas = new Canvas(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
@@ -62,13 +62,36 @@ public class MultiplayerGame{
         this.stage = stage;
         this.splashScene = splashScene;
         this.playerIsServer = playerIsServer;
+        this.server = server;
 
-        this.startGame();
+        this.startGameServer(server);
     }
     
-    public void startGame(){
+    public MultiplayerGame(Stage stage, Scene splashScene, boolean playerIsServer, Client client){
+        this.root = new Group();
+        this.scene = new Scene(root, Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
+        this.canvas = new Canvas(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
+        this.root.getChildren().add(this.canvas);
+        this.gc = canvas.getGraphicsContext2D();
+        this.stage = stage;
+        this.splashScene = splashScene;
+        this.playerIsServer = playerIsServer;
+        this.client = client;
+
+        this.startGameClient(client);
+    }
+    
+    public void startGameServer(Server server){
         // create the game timer
-        this.timer = new GameTimer(scene, gc, stage);
+        this.timer = new GameTimer(scene, gc, stage, 1, port, server);
+        // start the game
+        System.out.println("Starting multiplayer game");
+        // start the game timer
+        this.timer.start();
+    }
+    public void startGameClient(Client client){
+        // create the game timer
+        this.timer = new GameTimer(scene, gc, stage, 1, port, client);
         // start the game
         System.out.println("Starting multiplayer game");
         // start the game timer
