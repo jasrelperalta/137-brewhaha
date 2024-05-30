@@ -71,7 +71,6 @@ class Spaceship extends Sprite {
         this.loadImage(SPACESHIP_IMAGE);
         
         if(this.yPos > 600) {
-        	System.out.println("yPOS: "+this.yPos);
         	//this.die();
         }
 	}

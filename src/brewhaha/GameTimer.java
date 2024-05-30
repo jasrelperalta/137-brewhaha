@@ -215,7 +215,6 @@ class GameTimer extends AnimationTimer {
 		
 		// BOTTOM BUILDING
 		yPos = r.nextInt(Game.WINDOW_HEIGHT-100) + 100;
-		System.out.println(yPos);
 		this.buildings.add(new Building(xPos, yPos, r.nextInt(2), 1));
 		
 		

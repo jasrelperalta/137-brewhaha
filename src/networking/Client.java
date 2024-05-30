@@ -125,7 +125,7 @@ public class Client implements Runnable {
                 String playerListString = receivedMessage.substring(7);
                 System.out.println("playerListString");
                 // Parse the player list string into an array
-                String[] playerNames = playerListString.split(",");
+                String[] playerNames = playerListString.split(", ");
 
                 //print the player list
                 for (String p : playerNames) {
@@ -155,6 +155,7 @@ public class Client implements Runnable {
                     ObjectInputStream objStream = new ObjectInputStream(byteStream);
                     Building building = (Building) objStream.readObject();
                     if (callback != null) {
+                        System.out.println("Received building");
                         callback.onBuildingReceived(building);
                     }
                 } catch (IOException | ClassNotFoundException e) {

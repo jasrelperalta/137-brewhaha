@@ -149,7 +149,7 @@ public class MultiplayerScene {
                     public void run() {
                         playerList.clear();
                         for (String playerName : playerNames) {
-                            playerList.appendText(playerName + "\n");
+                            playerList.appendText(playerName.trim() + "\n");
                         }
                     }
                 });

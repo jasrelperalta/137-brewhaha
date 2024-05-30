@@ -110,11 +110,7 @@ public class Server implements Runnable {
                         sendToClients(packet.getData());
                         // Update the player list
                         for (GameUser p : players) {
-                            System.out.println("hanapin si " + p.getName().trim());
-                            System.out.println(p.getName().trim().equals(playerName.trim()));
                             if (p.getName().trim().equals(playerName.trim())) {
-                                System.out.println("ready");
-                                System.out.println(p.getName());
                                 p.setReady(true);
                             }
                         }
