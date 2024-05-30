@@ -3,7 +3,7 @@ package brewhaha;
 import java.util.Random;
 import javafx.scene.image.Image;
 
-class Spaceship extends Sprite {
+class Witch extends Sprite {
 	private String name;
 	private boolean alive;
 	private int score;
@@ -17,8 +17,8 @@ class Spaceship extends Sprite {
 	public final static int ADDED_SPEED = 3;
 	public final static int jumpHeight = 100;
 
-	Spaceship(String name, double y){
-       	super(Spaceship.INITIAL_X, 200,Spaceship.SPACESHIP_IMAGE);
+	Witch(String name, double y){
+       	super(Witch.INITIAL_X, 200,Witch.SPACESHIP_IMAGE);
        	Random r = new Random();
 		this.name = name;
 		this.alive = true;
@@ -71,7 +71,7 @@ class Spaceship extends Sprite {
         this.loadImage(SPACESHIP_IMAGE);
         
         if(this.yPos > 600) {
-        	//this.die();
+        	this.die();
         }
 	}
 	

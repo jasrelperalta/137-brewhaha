@@ -21,7 +21,7 @@ class GameTimer extends AnimationTimer {
 	private Stage stage;
 	private long startSpawn;
 	private GraphicsContext gc;
-	private Spaceship witch;
+	private Witch witch;
 	private Scene scene;
 	protected ArrayList<Building> buildings;
 
@@ -31,7 +31,7 @@ class GameTimer extends AnimationTimer {
 	private int win;	//1 if the player wins, 0 if lose
 	private boolean newBuilding;
 	
-	private Image background = new Image( "images/bg.jpg" );
+	private Image background = new Image( "images/bg3.png" );
 	public final static int HEIGHT_WITCH = 60;
 	public final static int XPOS = 790;
 	public final static int BACKGROUND_SPEED = 1;
@@ -43,7 +43,7 @@ class GameTimer extends AnimationTimer {
     	this.scene = scene;    	
     	this.stage = stage;
     	this.win = 0;
-    	this.witch = new Spaceship("Apollo", r.nextInt((Game.WINDOW_HEIGHT-GameTimer.HEIGHT_WITCH)-(50))+50);
+    	this.witch = new Witch("Apollo", r.nextInt((Game.WINDOW_HEIGHT-GameTimer.HEIGHT_WITCH)-(50))+50);
     	this.buildings = new ArrayList<Building>();
     	this.startSpawn = System.nanoTime();
     	this.prepareActionHandlers();
@@ -186,7 +186,7 @@ class GameTimer extends AnimationTimer {
 	}
 	
 	// witch getter
-	protected Spaceship getWitch() {
+	protected Witch getWitch() {
 		return this.witch;
 	}
 

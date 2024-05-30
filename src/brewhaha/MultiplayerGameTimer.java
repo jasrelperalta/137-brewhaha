@@ -85,7 +85,7 @@ public class MultiplayerGameTimer extends GameTimer {
         //calls the method to set the game over scene once the spaceship died
         if(!super.getWitch().isAlive()) {
         	this.stop();
-        	super.setGameOver(1);		// draw Game Over text
+        	super.setGameOver(0);		// draw Game Over text
         }
     }
 

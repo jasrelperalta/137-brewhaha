@@ -53,7 +53,7 @@ public class Building extends Sprite {
 			return this.position;
 		}
 	
-	void checkCollision(Spaceship spaceship){
+	void checkCollision(Witch spaceship){
 	
 		if(this.collidesWith(spaceship)){
 			spaceship.die();
