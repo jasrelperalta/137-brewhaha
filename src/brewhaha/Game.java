@@ -9,12 +9,16 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Optional;
 
 public class Game {
 	private Stage stage;
@@ -116,7 +120,21 @@ public class Game {
 	
 	//Method for setting multiplayer scene
 	private void setMultiplayer(Stage stage) {
-		this.mutiplayerScene = new MultiplayerScene(stage, splashScene);
+        // Create a dialog asking for IP Address
+        TextInputDialog ipDialog = new TextInputDialog();
+        ipDialog.setTitle("Enter IP Address");
+        ipDialog.setHeaderText("Please enter IP Address:");
+        Optional<String> ipAddressResult = ipDialog.showAndWait();
+        if (ipAddressResult.isPresent()) {
+            try {
+                InetAddress serverAddress = InetAddress.getByName(ipAddressResult.get());
+                this.mutiplayerScene = new MultiplayerScene(stage, splashScene, serverAddress);
+            } catch (UnknownHostException e) {
+                System.out.println("Error getting the ip address");
+            }
+        }
+
+
 		stage.setScene(this.mutiplayerScene.getScene());
 	}
 	

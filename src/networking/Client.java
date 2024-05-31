@@ -30,14 +30,14 @@ public class Client implements Runnable {
     private ClientCallback callback;
     
     // constßructor
-    public Client(int serverPort, String name, ClientCallback callback){
+    public Client(int serverPort, String name, InetAddress serverAddress, ClientCallback callback){
         try {
             this.socket = new DatagramSocket();
-            this.serverAddress = InetAddress.getLocalHost();
+            this.serverAddress = serverAddress;
             this.serverPort = serverPort;
             this.callback = callback;
             this.player = new GameUser(name, serverAddress, serverPort);
-            //System.out.println("Client created server address: " + serverAddress + " server port: " + serverPort);
+            System.out.println("Client created server address: " + serverAddress + " server port: " + serverPort);
         } catch (Exception e) {
             System.out.println("Error creating client socket");
         }

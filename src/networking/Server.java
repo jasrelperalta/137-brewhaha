@@ -30,18 +30,20 @@ public class Server implements Runnable {
     // Server callback
     private ServerCallback callback;
 
+    private InetAddress serverAddress;
+
     // constructor
-    public Server(int port, String name, ServerCallback callback){
+    public Server(int port, String name, InetAddress serverAddress, ServerCallback callback){
         this.state = GameState.INITIALIZING_SERVER;
         this.name = name;
+        this.serverAddress = serverAddress;
         try {
             
-            this.socket = new DatagramSocket(port, InetAddress.getLocalHost());
+            this.socket = new DatagramSocket(port, this.serverAddress);
             this.callback = callback; // set the callback
+            System.out.println("Server created on port: " + this.serverAddress + " " +  socket.getLocalPort());
         } catch (SocketException e) {
             System.out.println("Error creating server socket");
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         }
 
         // start the server thread
