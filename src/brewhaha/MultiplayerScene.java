@@ -79,7 +79,7 @@ public class MultiplayerScene {
             if (portResult.isPresent()) {
                 this.port = Integer.parseInt(portResult.get());
             }
-            this.server = new Server(port, this.playerName, new Server.ServerCallback() {
+            this.server = new Server(port, this.playerName, this.serverAddress, new Server.ServerCallback() {
         @Override
         public void onPlayerConnected(String playerName) {
             Platform.runLater(new Runnable() {

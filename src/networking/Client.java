@@ -37,7 +37,7 @@ public class Client implements Runnable {
             this.serverPort = serverPort;
             this.callback = callback;
             this.player = new GameUser(name, serverAddress, serverPort);
-            //System.out.println("Client created server address: " + serverAddress + " server port: " + serverPort);
+            System.out.println("Client created server address: " + serverAddress + " server port: " + serverPort);
         } catch (Exception e) {
             System.out.println("Error creating client socket");
         }
