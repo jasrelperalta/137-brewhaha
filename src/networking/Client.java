@@ -30,10 +30,10 @@ public class Client implements Runnable {
     private ClientCallback callback;
     
     // constßructor
-    public Client(int serverPort, String name, ClientCallback callback){
+    public Client(int serverPort, String name, InetAddress serverAddress, ClientCallback callback){
         try {
             this.socket = new DatagramSocket();
-            this.serverAddress = InetAddress.getLocalHost();
+            this.serverAddress = serverAddress;
             this.serverPort = serverPort;
             this.callback = callback;
             this.player = new GameUser(name, serverAddress, serverPort);

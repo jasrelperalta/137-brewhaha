@@ -54,13 +54,14 @@ public class MultiplayerScene {
     private Button readyButton;
 
 
-	MultiplayerScene(Stage stage, Scene splashScene){
+	MultiplayerScene(Stage stage, Scene splashScene, InetAddress serverAddress){
 		this.pane = new AnchorPane();
 		this.scene = new Scene(pane, Game.WINDOW_WIDTH,Game.WINDOW_HEIGHT);
 		this.canvas = new Canvas(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT);
 		this.gc = canvas.getGraphicsContext2D();
 		this.stage = stage;
 		this.splashScene = splashScene;
+        this.serverAddress = serverAddress;
         //this.gameScene = gameScene;
         
         // initialize multiplayer
@@ -110,7 +111,7 @@ public class MultiplayerScene {
         }
         });
             
-            System.out.println("Server started at " + server.getSocket().getLocalAddress() + " on port " + this.port);
+            System.out.println("Server started at " + this.serverAddress + " on port " + this.port);
             this.server.setState(GameState.WAITING_FOR_PLAYERS);
         }
         else
@@ -124,7 +125,7 @@ public class MultiplayerScene {
             if (portResult.isPresent()) {
                 this.port = Integer.parseInt(portResult.get());
             }
-            this.client = new Client(this.port, this.playerName, new Client.ClientCallback() {
+            this.client = new Client(this.port, this.playerName, this.serverAddress, new Client.ClientCallback() {
             @Override
             public void onMessageReceived(String message) {
                 // display the chat message in the chat area
@@ -177,12 +178,8 @@ public class MultiplayerScene {
             });
             System.out.println("Client started on port " + this.port);
             // send connect message to server
-            try {
-                client.connect(InetAddress.getLocalHost(), this.port, this.playerName);
-                // System.out.println("Connect message sent");
-            } catch (UnknownHostException e) {
-                System.out.println("Error sending connect message");
-            }
+            client.connect(this.serverAddress, this.port, this.playerName);
+            // System.out.println("Connect message sent");
 
 
         }
@@ -222,18 +219,6 @@ public class MultiplayerScene {
         Optional<String> nameResult = nameDialog.showAndWait();
         if (nameResult.isPresent()) {
             this.playerName = nameResult.get();
-        }
-
-        TextInputDialog ipDialog = new TextInputDialog();
-        ipDialog.setTitle("Enter IP Address");
-        ipDialog.setHeaderText("Please enter IP Address:");
-        Optional<String> ipAddressResult = ipDialog.showAndWait();
-        if (ipAddressResult.isPresent()) {
-            try {
-                this.serverAddress = InetAddress.getByName(ipAddressResult.get());
-            } catch (UnknownHostException e) {
-                System.out.println("Error getting the ip address");
-            }
         }
 
         //System.out.println("here");
@@ -326,6 +311,7 @@ public class MultiplayerScene {
     // add event handlers
     private void addEventHandlers(){
         // send button
+        InetAddress serverAddress = this.serverAddress;
         this.sendButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent arg0) {
                 // send the chat message
@@ -340,7 +326,7 @@ public class MultiplayerScene {
                 } else {
                     // instantiate the client if it doesn't exist
                     if (MultiplayerScene.this.client == null){
-                        MultiplayerScene.this.client = new Client(port, playerName, new Client.ClientCallback() {
+                        MultiplayerScene.this.client = new Client(port, playerName, serverAddress, new Client.ClientCallback() {
                             @Override
                             public void onMessageReceived(String message) {
                                 Platform.runLater(new Runnable() {
@@ -390,11 +376,7 @@ public class MultiplayerScene {
                         });
                     }
                     // send the message to the server so it can be broadcasted to all clients
-                    try {
-                        MultiplayerScene.this.client.sendPacket(chatMessage.getBytes(), InetAddress.getLocalHost(), port);
-                    } catch (UnknownHostException e) {
-                        System.out.println("Error sending chat message to server");
-                    }
+                    MultiplayerScene.this.client.sendPacket(chatMessage.getBytes(), serverAddress, port);
                 }
             }
         });
@@ -448,7 +430,7 @@ public class MultiplayerScene {
                 } else {
                     // instantiate the client if it doesn't exist
                     if (MultiplayerScene.this.client == null){
-                        MultiplayerScene.this.client = new Client(port, playerName, new Client.ClientCallback() {
+                        MultiplayerScene.this.client = new Client(port, playerName, serverAddress, new Client.ClientCallback() {
                             @Override
                             public void onMessageReceived(String message) {
                                 Platform.runLater(new Runnable() {
@@ -498,13 +480,10 @@ public class MultiplayerScene {
                         });
                     }
                     // send the message to the server so it can be broadcasted to all clients
-                    try {
-                        MultiplayerScene.this.client.sendPacket(readyMessage.getBytes(), InetAddress.getLocalHost(), port);
-                        // update the ready state of the player
-                        MultiplayerScene.this.client.getGameUser().setReady(true);
-                    } catch (UnknownHostException e) {
-                        System.out.println("Error sending ready message to server");
-                    }
+
+                    MultiplayerScene.this.client.sendPacket(readyMessage.getBytes(), serverAddress, port);
+                    // update the ready state of the player
+                    MultiplayerScene.this.client.getGameUser().setReady(true);
                 }
             }
         });
